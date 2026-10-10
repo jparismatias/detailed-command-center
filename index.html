@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Detailer Command Center</title>
+
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#050a12;
+  --panel:#0b1422;
+  --panel2:#101c2d;
+  --blue:#168cff;
+  --blue2:#54b4ff;
+  --text:#f5f8fc;
+  --muted:#91a0b5;
+  --green:#35d07f;
+  --border:#1d3148;
+  --danger:#ff5b69;
+}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#07111f 0%,#03070d 100%);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 16px 100px}
+.logo{text-align:center;padding:18px 0 8px}
+.logo-mark{
+  width:70px;height:40px;margin:auto;position:relative;
+  border-bottom:4px solid var(--blue);border-radius:50%;
+}
+.logo-mark:before{
+  content:"";position:absolute;left:10px;right:10px;bottom:5px;height:17px;
+  border:3px solid var(--blue2);border-bottom:0;border-radius:50% 50% 0 0;
+}
+.logo h1{font-size:22px;letter-spacing:1.8px;margin:9px 0 2px}
+.logo h1 span{color:var(--blue)}
+.tagline{color:var(--muted);font-size:11px;letter-spacing:3px}
+.screen{display:none}
+.screen.active{display:block}
+.card{
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  border:1px solid var(--border);border-radius:18px;padding:18px;margin:14px 0;
+  box-shadow:0 14px 35px rgba(0,0,0,.25);
+}
+h2{font-size:25px;margin:10px 0 5px}
+.sub{color:var(--muted);font-size:14px;line-height:1.45;margin-bottom:18px}
+label{display:block;color:#c9d4e2;font-size:13px;margin:14px 0 6px}
+input,select{
+  width:100%;background:#07111d;color:white;border:1px solid #29425e;
+  padding:14px;border-radius:12px;font-size:16px;outline:none;
+}
+input:focus,select:focus{border-color:var(--blue)}
+button{
+  width:100%;border:0;border-radius:13px;padding:15px;font-size:16px;
+  font-weight:700;cursor:pointer;margin-top:10px;
+}
+.primary{background:linear-gradient(90deg,#0877e8,#25a5ff);color:white}
+.secondary{background:#132237;color:white;border:1px solid #29415e}
+.green{background:var(--green);color:#03130a}
+.back{background:none;color:var(--muted);padding:10px;margin-top:6px}
+.home-button{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--panel);border:1px solid var(--border);padding:18px;
+  border-radius:15px;margin:11px 0;color:white;font-weight:700;
+}
+.home-button span{color:var(--blue2)}
+.progress{display:flex;gap:5px;margin:10px 0 20px}
+.progress i{height:4px;flex:1;background:#1b2a3d;border-radius:4px}
+.progress i.on{background:var(--blue)}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.type,.package{
+  border:1px solid var(--border);background:#0a1524;border-radius:13px;
+  padding:13px 8px;text-align:center;color:#d9e5f2;cursor:pointer;
+}
+.type.selected,.package.selected{border-color:var(--blue);background:#0d2844}
+.packages{display:grid;gap:10px}
+.package{text-align:left;padding:16px}
+.package strong{display:block;font-size:16px}
+.package small{color:var(--muted)}
+.services{margin-top:8px}
+.service{display:flex;gap:10px;align-items:center;padding:8px 0;color:#c8d5e5}
+.service input{width:auto}
+.result-price{text-align:center;padding:15px}
+.result-price small{color:var(--muted)}
+.result-price .price{font-size:46px;font-weight:800;color:var(--green);margin:5px}
+.row{
+  display:flex;justify-content:space-between;gap:15px;
+  padding:11px 0;border-bottom:1px solid #19283a;
+}
+.row:last-child{border:0}
+.row span:first-child{color:var(--muted)}
+.money{color:var(--green);font-weight:700}
+.vehicle-summary{font-size:18px;font-weight:700}
+.quote{
+  background:white;color:#111;border-radius:18px;padding:22px;margin-top:14px;
+}
+.quote-brand{text-align:center;border-bottom:2px solid #e8edf3;padding-bottom:15px}
+.quote-brand strong{font-size:20px}
+.quote-brand small{display:block;color:#687386;margin-top:4px}
+.quote .row{border-color:#e5e8ec}
+.quote .row span:first-child{color:#657080}
+.quote-total{text-align:center;font-size:38px;font-weight:800;margin:22px 0;color:#0877e8}
+.notice{
+  background:#09253a;border:1px solid #164e75;color:#a8d9ff;
+  border-radius:12px;padding:12px;font-size:13px;line-height:1.4;margin:12px 0;
+}
+.error{color:var(--danger);font-size:13px;margin-top:8px}
+.hidden{display:none}
+footer{text-align:center;color:#526176;font-size:11px;margin-top:30px}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <h1>DETAILER <span>COMMAND CENTER</span></h1>
+    <div class="tagline">PRICE / PLAN / GROW</div>
+  </div>
+
+  <!-- HOME -->
+  <section id="home" class="screen active">
+    <div class="card">
+      <h2>Command Center</h2>
+      <div class="sub">Price jobs confidently, protect your profit, and build professional customer quotes.</div>
+      <button class="primary" onclick="go('vehicle')">+ New Quote</button>
+    </div>
+
+    <div class="home-button" onclick="go('vehicle')">Calculator <span>›</span></div>
+    <div class="home-button" onclick="alert('Your saved packages will appear here in the full app.')">My Packages <span>›</span></div>
+    <div class="home-button" onclick="showHistory()">Job History <span>›</span></div>
+    <div class="home-button" onclick="alert('Business settings will be available in the finished app.')">Settings <span>›</span></div>
+  </section>
+
+  <!-- VEHICLE -->
+  <section id="vehicle" class="screen">
+    <div class="progress"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+    <h2>Vehicle Information</h2>
+    <div class="sub">Start your quote with the customer's vehicle.</div>
+
+    <div class="card">
+      <label>Year</label>
+      <input id="year" type="number" placeholder="2022">
+
+      <label>Make</label>
+      <input id="make" placeholder="BMW">
+
+      <label>Model</label>
+      <input id="model" placeholder="X5">
+
+      <label>Vehicle Type</label>
+      <div class="types">
+        <div class="type" onclick="pickType(this,'Sedan')">Sedan</div>
+        <div class="type" onclick="pickType(this,'SUV')">SUV</div>
+        <div class="type" onclick="pickType(this,'Truck')">Truck</div>
+        <div class="type" onclick="pickType(this,'Coupe')">Coupe</div>
+        <div class="type" onclick="pickType(this,'Van')">Van</div>
+        <div class="type" onclick="pickType(this,'Other')">Other</div>
+      </div>
+      <div id="vehicleError" class="error"></div>
+    </div>
+
+    <button class="primary" onclick="vehicleNext()">Continue to Packages</button>
+    <button class="back" onclick="go('home')">← Back</button>
+  </section>
+
+  <!-- PACKAGES -->
+  <section id="packages" class="screen">
+    <div class="progress"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+    <h2>Select Package</h2>
+    <div id="vehicleLine" class="sub"></div>
+
+    <div class="packages">
+      <div class="package" onclick="pickPackage(this,'Basic Wash')">
+        <strong>Basic Wash</strong>
+        <small>Exterior wash, wheels, tires and glass</small>
+      </div>
+      <div class="package" onclick="pickPackage(this,'Interior Detail')">
+        <strong>Interior Detail</strong>
+        <small>Vacuum, surfaces, interior glass and cleaning</small>
+      </div>
+      <div class="package" onclick="pickPackage(this,'Full Detail')">
+        <strong>Full Detail</strong>
+        <small>Complete interior and exterior service</small>
+      </div>
+      <div class="package" onclick="pickPackage(this,'Custom')">
+        <strong>Create My Own</strong>
+        <small>Build a custom service for this customer</small>
+      </div>
+    </div>
+
+    <div id="packageError" class="error"></div>
+    <button class="primary" onclick="packageNext()">Continue to Job Details</button>
+    <button class="back" onclick="go('vehicle')">← Back</button>
+  </section>
+
+  <!-- JOB DETAILS -->
+  <section id="details" class="screen">
+    <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+    <h2>Job Details</h2>
+    <div class="sub">Enter what this job will really take.</div>
+
+    <div class="card">
+      <label>Labor Hours</label>
+      <input id="hours" type="number" step="0.25" value="4">
+
+      <label>Pay Yourself Per Hour ($)</label>
+      <input id="hourly" type="number" step="0.01" value="35">
+
+      <label>Supplies / Products ($)</label>
+      <input id="supplies" type="number" step="0.01" value="25">
+
+      <label>Travel ($)</label>
+      <input id="travel" type="number" step="0.01" value="15">
+
+      <label>Other Expenses ($)</label>
+      <input id="other" type="number" step="0.01" value="10">
+
+      <label>Desired Profit Margin (%)</label>
+      <input id="margin" type="number" step="1" value="30">
+
+      <div class="notice">
+        Your hourly pay is treated separately from business profit, so the quote covers your time, expenses, and profit.
+      </div>
+      <div id="calcError" class="error"></div>
+    </div>
+
+    <button class="green" onclick="calculate()">Calculate Quote</button>
+    <button class="back" onclick="go('packages')">← Back</button>
+  </section>
+
+  <!-- OWNER -->
+  <section id="owner" class="screen">
+    <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+    <h2>Owner View</h2>
+    <div class="sub">Private numbers for you. Do not show this screen to the customer.</div>
+
+    <div class="card">
+      <div class="result-price">
+        <small>CHARGE YOUR CUSTOMER</small>
+        <div id="ownerPrice" class="price">$0.00</div>
+      </div>
+
+      <div class="row"><span>Pay for Your Time</span><strong id="laborPay">$0.00</strong></div>
+      <div class="row"><span>Job Expenses</span><strong id="expenses">$0.00</strong></div>
+      <div class="row"><span>What This Job Costs You</span><strong id="trueCost">$0.00</strong></div>
+      <div class="row"><span>Extra Business Profit</span><strong id="profit" class="money">$0.00</strong></div>
+      <div class="row"><span>Profit Margin</span><strong id="actualMargin">0%</strong></div>
+      <div class="row"><span>Effective Hourly Pay</span><strong id="effectiveHourly">$0.00/hr</strong></div>
+    </div>
+
+    <button class="primary" onclick="customerView()">Customer View</button>
+    <button class="secondary" onclick="saveJob()">Save Job</button>
+    <button class="back" onclick="go('details')">← Adjust Job Details</button>
+  </section>
+
+  <!-- CUSTOMER -->
+  <section id="customer" class="screen">
+    <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <h2>Customer View</h2>
+    <div class="sub">Safe to show your customer. Your costs and profit stay private.</div>
+
+    <div class="quote">
+      <div class="quote-brand">
+        <strong>DETAILER COMMAND CENTER</strong>
+        <small>Professional Detailing Quote</small>
+      </div>
+
+      <div class="row"><span>Vehicle</span><strong id="customerVehicle"></strong></div>
+      <div class="row"><span>Vehicle Type</span><strong id="customerType"></strong></div>
+      <div class="row"><span>Service</span><strong id="customerPackage"></strong></div>
+      <div class="row"><span>Date</span><strong id="quoteDate"></strong></div>
+
+      <div class="quote-total" id="customerPrice">$0.00</div>
+
+      <div style="text-align:center;color:#657080;font-size:13px">
+        Thank you for the opportunity to earn your business.
+      </div>
+    </div>
+
+    <button class="primary" onclick="shareQuote()">Share Quote</button>
+    <button class="secondary" onclick="go('owner')">Back to Owner View</button>
+    <button class="back" onclick="newQuote()">Start New Quote</button>
+  </section>
+
+  <!-- HISTORY -->
+  <section id="history" class="screen">
+    <h2>Job History</h2>
+    <div class="sub">Quotes saved on this device.</div>
+    <div id="historyList"></div>
+    <button class="back" onclick="go('home')">← Home</button>
+  </section>
+
+  <footer>Detailer Command Center • PRICE / PLAN / GROW</footer>
+</div>
+
+<script>
+const state={
+  vehicleType:"",
+  package:"",
+  price:0,
+  laborPay:0,
+  expenses:0,
+  trueCost:0,
+  profit:0,
+  margin:0,
+  hours:0
+};
+
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function pickType(el,type){
+  document.querySelectorAll(".type").forEach(x=>x.classList.remove("selected"));
+  el.classList.add("selected");
+  state.vehicleType=type;
+}
+
+function vehicleNext(){
+  const year=document.getElementById("year").value.trim();
+  const make=document.getElementById("make").value.trim();
+  const model=document.getElementById("model").value.trim();
+
+  if(!year || !make || !model || !state.vehicleType){
+    document.getElementById("vehicleError").textContent="Please complete the vehicle information and select a vehicle type.";
+    return;
+  }
+
+  document.getElementById("vehicleError").textContent="";
+  state.year=year;
+  state.make=make;
+  state.model=model;
+
+  document.getElementById("vehicleLine").textContent=
+    year+" "+make+" "+model+" • "+state.vehicleType;
+
+  go("packages");
+}
+
+function pickPackage(el,name){
+  document.querySelectorAll(".package").forEach(x=>x.classList.remove("selected"));
+  el.classList.add("selected");
+  state.package=name;
+}
+
+function packageNext(){
+  if(!state.package){
+    document.getElementById("packageError").textContent="Select a package before continuing.";
+    return;
+  }
+  document.getElementById("packageError").textContent="";
+  go("details");
+}
+
+function number(id){
+  return parseFloat(document.getElementById(id).value)||0;
+}
+
+function money(n){
+  return "$"+Number(n).toFixed(2);
+}
+
+function calculate(){
+  const hours=number("hours");
+  const hourly=number("hourly");
+  const supplies=number("supplies");
+  const travel=number("travel");
+  const other=number("other");
+  const margin=number("margin")/100;
+
+  if(hours<=0 || hourly<0 || margin<0 || margin>=1){
+    document.getElementById("calcError").textContent=
+      "Check your labor hours, hourly pay, and profit margin. Margin must be below 100%.";
+    return;
+  }
+
+  document.getElementById("calcError").textContent="";
+
+  const laborPay=hours*hourly;
+  const expenses=supplies+travel+other;
+  const trueCost=laborPay+expenses;
+  const price=trueCost/(1-margin);
+  const profit=price-trueCost;
+
+  state.hours=hours;
+  state.laborPay=laborPay;
+  state.expenses=expenses;
+  state.trueCost=trueCost;
+  state.price=price;
+  state.profit=profit;
+  state.margin=margin*100;
+
+  document.getElementById("ownerPrice").textContent=money(price);
+  document.getElementById("laborPay").textContent=money(laborPay);
+  document.getElementById("expenses").textContent=money(expenses);
+  document.getElementById("trueCost").textContent=money(trueCost);
+  document.getElementById("profit").textContent=money(profit);
+  document.getElementById("actualMargin").textContent=(margin*100).toFixed(1)+"%";
+  document.getElementById("effectiveHourly").textContent=
+    money(hours ? laborPay/hours : 0)+"/hr";
+
+  go("owner");
+}
+
+function customerView(){
+  document.getElementById("customerVehicle").textContent=
+    state.year+" "+state.make+" "+state.model;
+  document.getElementById("customerType").textContent=state.vehicleType;
+  document.getElementById("customerPackage").textContent=state.package;
+  document.getElementById("customerPrice").textContent=money(state.price);
+  document.getElementById("quoteDate").textContent=new Date().toLocaleDateString();
+  go("customer");
+}
+
+function quoteText(){
+  return "DETAILER COMMAND CENTER\n"+
+    "Professional Detailing Quote\n\n"+
+    "Vehicle: "+state.year+" "+state.make+" "+state.model+"\n"+
+    "Vehicle Type: "+state.vehicleType+"\n"+
+    "Service: "+state.package+"\n"+
+    "Quoted Price: "+money(state.price)+"\n\n"+
+    "Thank you for the opportunity to earn your business.";
+}
+
+async function shareQuote(){
+  const text=quoteText();
+
+  if(navigator.share){
+    try{
+      await navigator.share({
+        title:"Detailing Quote",
+        text:text
+      });
+      return;
+    }catch(e){
+      if(e.name==="AbortError") return;
+    }
+  }
+
+  try{
+    await navigator.clipboard.writeText(text);
+    alert("Quote copied. You can paste it into Messages, Mail, or another app.");
+  }catch(e){
+    alert(text);
+  }
+}
+
+function saveJob(){
+  const job={
+    date:new Date().toLocaleDateString(),
+    vehicle:state.year+" "+state.make+" "+state.model,
+    type:state.vehicleType,
+    package:state.package,
+    price:state.price
+  };
+
+  const jobs=JSON.parse(localStorage.getItem("dccJobs")||"[]");
+  jobs.unshift(job);
+  localStorage.setItem("dccJobs",JSON.stringify(jobs));
+  alert("Job saved on this device.");
+}
+
+function showHistory(){
+  const jobs=JSON.parse(localStorage.getItem("dccJobs")||"[]");
+  const list=document.getElementById("historyList");
+
+  if(!jobs.length){
+    list.innerHTML='<div class="card"><div class="sub" style="margin:0">No saved jobs yet.</div></div>';
+  }else{
+    list.innerHTML=jobs.map(j=>`
+      <div class="card">
+        <div class="vehicle-summary">${j.vehicle}</div>
+        <div class="sub">${j.type} • ${j.package} • ${j.date}</div>
+        <div class="money" style="font-size:22px">${money(j.price)}</div>
+      </div>
+    `).join("");
+  }
+
+  go("history");
+}
+
+function newQuote(){
+  state.vehicleType="";
+  state.package="";
+  document.querySelectorAll(".selected").forEach(x=>x.classList.remove("selected"));
+  document.getElementById("year").value="";
+  document.getElementById("make").value="";
+  document.getElementById("model").value="";
+  go("vehicle");
+}
+</script>
+</body>
+</html>
